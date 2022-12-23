@@ -57,6 +57,8 @@ public class Orchestrator {
                         }
                     } catch (Exception e) {
                         log.error("Work job is fall\n\trequest is: "+Util.convertBytesToString(wrapper.getRequest()));
+                        log.error(e.getLocalizedMessage());
+                        log.error(e.getMessage());
                         wrapper.getControllerLink().setResponse(new byte[10]);
                     }
                 }
