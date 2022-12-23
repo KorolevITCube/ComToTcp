@@ -28,7 +28,7 @@ public class Orchestrator {
 
     public Orchestrator() {
         requestsQueue = new ConcurrentLinkedQueue<>();
-        //this.driver = ComDriver.getInstance();
+        this.driver = ComDriver.getInstance();
         var daemon = new Thread(new RequestsConsumer());
         daemon.setDaemon(true);
         daemon.start();

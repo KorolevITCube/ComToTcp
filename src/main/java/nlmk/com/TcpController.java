@@ -14,7 +14,7 @@ public class TcpController implements Runnable{
     private Socket clientDialog;
     private Orchestrator orchestrator;
     private byte[] response = null;
-    private static final Logger log = LoggerFactory.getLogger(MainController.class);
+    private static final Logger log = LoggerFactory.getLogger(TcpController.class);
 
     public TcpController(Socket clientDialog) {
         this.clientDialog = clientDialog;
