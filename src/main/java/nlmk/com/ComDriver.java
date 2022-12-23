@@ -25,7 +25,7 @@ public class ComDriver {
     private final int parity = 0;
 
     // название порта
-    private String portDescriptor = "COM1";
+    private String portDescriptor = "COM3";
 
     // тайм-аут чтения
     private final int readTimeOut = 1000;
