@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainController {
-//    static ExecutorService executeIt = Executors.newFixedThreadPool(2);
+    static ExecutorService executeIt = Executors.newFixedThreadPool(6);
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     public static void main(String[] args) {
@@ -20,13 +20,12 @@ public class MainController {
 
             while (!server.isClosed()) {
                 Socket client = server.accept();
-                new Thread(new TcpController(client)).start();
-//                executeIt.execute(new TcpController(client));
+                executeIt.execute(new TcpController(client));
                 System.out.print("Connection accepted.");
             }
 
             // закрытие пула нитей после завершения работы всех нитей
-//            executeIt.shutdown();
+            executeIt.shutdown();
         } catch (IOException e) {
 
             e.printStackTrace();
