@@ -11,6 +11,7 @@ import java.net.Socket;
 import java.util.Arrays;
 
 public class TcpController implements Runnable{
+    private Long timeOut = 7000L;
     private Socket clientDialog;
     private Orchestrator orchestrator;
     private volatile byte[] response = null;
@@ -27,21 +28,25 @@ public class TcpController implements Runnable{
 
     @Override
     public void run() {
-        boolean stopFlag = false;
-        new Thread(new ResponseConsumer());
         try(DataInputStream in = new DataInputStream(clientDialog.getInputStream());
             DataOutputStream out = new DataOutputStream(clientDialog.getOutputStream());) {
             log.info("DataInputStream created");
             log.info("DataOutputStream  created");
+            long oldTime = System.currentTimeMillis();
 
-            while (!clientDialog.isClosed() && !stopFlag) {
-                byte[] result = readRequest(in);
-                if(result.length > 0 && result[0] == -1){
-                    stopFlag = true;
-                    log.info("Receive -1, client was disconnect");
-                }else {
+            while (!clientDialog.isClosed()) {
+                if(System.currentTimeMillis() - oldTime > timeOut) break;
+                if(response != null){
+                    out.write(response,0,response.length);
+                    log.info("Send response to client: "+ Util.convertBytesToString(response));
+                    out.flush();
+                    response = null;
+                }
+                if(in.available() > 0){
+                    byte[] result = readRequest(in);
+                    oldTime = System.currentTimeMillis();
                     log.info("Receive message from client- " + Util.convertBytesToString(result));
-                    orchestrator.addRequestToQueue(new RequestWrapper(result, this));
+                    orchestrator.addRequestToQueue(new RequestWrapper(result,this));
                 }
             }
             log.info("Client disconnected");
@@ -54,10 +59,15 @@ public class TcpController implements Runnable{
 
     private class ResponseConsumer implements Runnable{
 
+        Socket clientDialog;
         boolean stopFlag = false;
 
         public void stopThread(){
             stopFlag = true;
+        }
+
+        public ResponseConsumer(Socket clientDialog){
+            this.clientDialog = clientDialog;
         }
 
         @Override
@@ -65,10 +75,7 @@ public class TcpController implements Runnable{
             try(DataOutputStream out = new DataOutputStream(clientDialog.getOutputStream())){
                 while(!stopFlag){
                     if(response != null){
-                        out.write(response,0,response.length);
-                        log.info("Send response to client: "+ Util.convertBytesToString(response));
-                        out.flush();
-                        response = null;
+
                     }
                 }
             }catch (IOException e){
@@ -83,17 +90,13 @@ public class TcpController implements Runnable{
             byte[] result;
             Arrays.fill(buffer, (byte) -1);
             var counter = 0;
-            byte current = -2;
+            byte current = -1;
             do {
                 current = (byte) is.read();
                 buffer[counter] = current;
                 counter++;
-            } while (current != 0x03 || current != -1);
-            if(current == -1){
-                result = new byte[]{-1};
-            }else {
-                result = Arrays.copyOfRange(buffer, 0, counter);
-            }
+            } while (current != 0x03);
+            result = Arrays.copyOfRange(buffer, 0, counter);
             return result;
         }catch(Exception e){
             log.error("Cant read data from input stream " + e.getCause());
