@@ -86,10 +86,10 @@ public class TcpController implements Runnable{
 
     private byte[] readRequest(InputStream is) throws IOException {
         try {
-            var buffer = new byte[128];
+            byte[] buffer = new byte[128];
             byte[] result;
             Arrays.fill(buffer, (byte) -1);
-            var counter = 0;
+            int counter = 0;
             byte current = -1;
             do {
                 current = (byte) is.read();

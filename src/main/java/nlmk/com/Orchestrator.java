@@ -29,7 +29,7 @@ public class Orchestrator {
     public Orchestrator() {
         requestsQueue = new ConcurrentLinkedQueue<>();
         this.driver = ComDriver.getInstance();
-        var daemon = new Thread(new RequestsConsumer());
+        Thread daemon = new Thread(new RequestsConsumer());
         daemon.setDaemon(true);
         daemon.start();
     }
@@ -50,7 +50,7 @@ public class Orchestrator {
                         log.info("New iteration in queue requests. Request count is: " + requestsQueue.size());
                         while (!requestsQueue.isEmpty()) {
                             wrapper = requestsQueue.poll();
-                            var request = wrapper.getRequest();
+                            byte[] request = wrapper.getRequest();
                             driver.writeRequest(request);
                             byte[] currentResponse = driver.readResponse();
                             wrapper.getControllerLink().setResponse(currentResponse);

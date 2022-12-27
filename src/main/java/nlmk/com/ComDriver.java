@@ -87,11 +87,11 @@ public class ComDriver {
 
     public synchronized byte[] readResponse() throws IOException {
         try {
-            var is = getInputStream();
-            var buffer = new byte[128];
+            InputStream is = getInputStream();
+            byte[] buffer = new byte[128];
             byte[] result;
             Arrays.fill(buffer, (byte) -1);
-            var counter = 0;
+            int counter = 0;
             byte current;
             do {
                 current = (byte) is.read();

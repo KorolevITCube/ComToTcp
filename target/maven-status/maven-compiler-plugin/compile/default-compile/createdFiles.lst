@@ -2,6 +2,8 @@ nlmk/com/ComDriver.class
 nlmk/com/TcpController.class
 nlmk/com/RequestWrapper.class
 nlmk/com/Orchestrator$RequestsConsumer.class
+nlmk/com/Orchestrator$1.class
 nlmk/com/MainController.class
+nlmk/com/TcpController$ResponseConsumer.class
 nlmk/com/Orchestrator.class
 nlmk/com/Util.class
