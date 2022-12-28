@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class MainController {
-    static ExecutorService executeIt = Executors.newFixedThreadPool(6);
+    static ExecutorService executeIt = Executors.newFixedThreadPool(12);
     private static final Logger log = LoggerFactory.getLogger(MainController.class);
 
     public static void main(String[] args) {

@@ -11,7 +11,7 @@ import java.net.Socket;
 import java.util.Arrays;
 
 public class TcpController implements Runnable{
-    private Long timeOut = 7000L;
+    private Long timeOut = 6000L;
     private Socket clientDialog;
     private Orchestrator orchestrator;
     private volatile byte[] response = null;
