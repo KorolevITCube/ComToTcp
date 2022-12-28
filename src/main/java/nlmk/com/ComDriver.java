@@ -25,13 +25,13 @@ public class ComDriver {
     private final int parity = 0;
 
     // название порта
-    private String portDescriptor = "COM3";
+    private String portDescriptor = "COM9";
 
     // тайм-аут чтения
-    private final int readTimeOut = 1000;
+    private final int readTimeOut = 5000;
 
     // тайм-аут записи
-    private final int writeTimeOut = 100;
+    private final int writeTimeOut = 1000;
 
     // порт
     private SerialPort serialPort;
@@ -88,7 +88,7 @@ public class ComDriver {
     public synchronized byte[] readResponse() throws IOException {
         try {
             InputStream is = getInputStream();
-            byte[] buffer = new byte[128];
+            byte[] buffer = new byte[256];
             byte[] result;
             Arrays.fill(buffer, (byte) -1);
             int counter = 0;
